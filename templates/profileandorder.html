@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% block title %}Profil{% endblock title %}
+{% load static %}
+{% block content %}
+
+
+
+<main>
+    <div class="container"><br>
+      <div class="profile-order">
+        <div class="profileorder-btns">
+          <button class="order-btn" onclick="viewsorder()">
+            <input checked type="radio" name="proder">
+            <p>Buyurtmalarim</p>
+          </button>
+          <button class="myprofile-btn" onclick="viewsorder2()">
+            <input type="radio" name="proder">
+            <p> Ma'lumotlarim</p>
+          </button>
+          <button class="myprofile-btn" onclick="viewsorder3()">
+            <input type="radio" name="proder">
+            <p>Uz Toys Shop Joylashuvi</p>
+          </button>
+          
+          <button class="myprofile-btn appbrads" onclick="viewsorder4()">
+            <input type="radio" name="proder">
+            <p>Bizning ijtimoiy tarmoqlarimiz</p>
+          </button>
+        </div><br>
+        <div class="content">
+          <div id="div1" class="order-content login-dn visible">
+            <button type="submit" class="ordersortbtn" onclick="viewsorderproduct()"><input checked type="radio" name="choice">
+              <p>Hammasi</p>
+            </button>
+            <button type="submit" class="ordersortbtn" onclick="viewsorderproduct2()"><input type="radio" name="choice">
+              <p>Hozir</p>
+            </button>
+            <div id="order1" class="all-orders login-dn visible">
+              {% for order in orders %}
+                <div class="infoe">
+                  
+                    <div class="info">
+                      <p class="serial-number">
+                        ID: {{order.id}}
+                      </p>
+                      <div class="product-count">
+                        Mahsulotlar soni:{{order.total_quantity}}
+                      </div>
+                      {% if order.date %}
+                      <div class="deliverytime delivery-time">
+                        {{ order.date|date:"j-F" }}
+                      </div>
+                      {% endif %}
+                
+                      <div class="deliverytime delivery-time statuspath" 
+                      {% if order.status == "P" %}
+          style="border-color: gray; color: gray;" 
+      {% elif order.status == "M" %}
+          style="border-color: gold; color: gold;"  
+      {% elif order.status == "R" %}
+          style="border-color: dodgerblue; color: dodgerblue;"  
+      {% elif order.status == "F" %}
+          style="border-color: tomato; color: tomato;"  
+      {% elif order.status == "S" %}
+          style="border-color: limegreen; color: limegreen;"
+      {% endif %}
+                      >
+                        {{order.get_status_display}}
+                      </div>
+                      <div class="product-price">
+                        {{order.get_format_price}} so'm
+                      </div>
+                      <!-- hardoim btnga onclick bolgandagi funcksiya raqamini  "orderproduct1"ni ohirgi raqami bilan birhil qiling  -->
+                      <button onclick="toggleDiv({{forloop.counter}})" class="allproductssee-btn">
+                        Mahsulotlarni ko'rish
+                      </button>
+                    </div>
+                  <!-- hardoim shu idni ohirgi raqamini o'zgariring "orderproduct1" -->
+                  <div class="cart-products  " id="orderproduct{{forloop.counter}}" style="border-top: 1px solid var(--border-color); display: none;">
+                    {% for product in order.items.all %}
+                    <div class="cartproduct" style="border: none;">
+                      <div class="cart-content">
+                        <a href="{% url "main:product_detail" product_id=product.product.id %}" class="cartp-img">
+                          <img class="cartp-img" src="{{product.product.get_banner_image.image.url}}" alt="">
+    
+    
+                        </a>
+                        <div class="ccr">
+                          <h3 class="carth3 cartp-name" style="overflow: auto;text-wrap: wrap;">{{product.product.name}}
+                          </h3>
+                          <ul class="ul">
+                            <li style="display: flex;justify-content: space-between;flex-wrap: wrap;">
+                              <h4 class="sellerh4"><span>Sotuvchi:</span> {{product.product.seller}}</h4>
+    
+                              <div style="margin-left: 1%;text-wrap: nowrap;" class="checkout-h5">Mahsulot soni : {{product.quantity}} dona</div>
+    
+    
+    
+    
+                            </li>
+                            <li>
+                              <div class="pricess">
+                                <div class="carth3 item">{{product.product.get_discounted_price}} so’m</div>
+                                {% if product.product.discount %}
+                                <div class="sellerh4 item"
+                                style="text-decoration: line-through;color: var(--grey-color);">{{product.product.get_format_price}} so’m
+                                </div>
+                                {% endif %}
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <hr style="width: 96%;margin: auto; border: 0.5px solid var(--border-color);">
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div id="order2" class="all-orders login-dn">
+              {% for order in new_order %}
+                      
+                <div class="infoe">
+                
+                  <div class="info">
+                    <p class="serial-number">
+                      Id:{{order.id}}
+                    </p>
+                    <div class="product-count">
+                      Mahsulotlar soni:{{order.total_quantity}}
+                    </div>
+                    {% if order.date %}
+                    <div class="deliverytime delivery-time">
+                      {{ order.date|date:"j-F" }}
+                    </div>
+                    {% endif %}
+              
+                    <div class="deliverytime delivery-time statuspath" 
+                    {% if order.status == "P" %}
+        style="border-color: gray; color: gray;" 
+    {% elif order.status == "M" %}
+        style="border-color: gold; color: gold;"  
+    {% elif order.status == "R" %}
+        style="border-color: dodgerblue; color: dodgerblue;"  
+    {% elif order.status == "F" %}
+        style="border-color: tomato; color: tomato;"  
+    {% elif order.status == "S" %}
+        style="border-color: limegreen; color: limegreen;"
+    {% endif %}
+                    >
+                      {{order.get_status_display}}
+                    </div>
+                    <div class="product-price">
+                      {{order.get_format_price}} so'm
+                    </div>
+                    <!-- hardoim btnga onclick bolgandagi funcksiya raqamini  "orderproduct1"ni ohirgi raqami bilan birhil qiling  -->
+                    <button onclick="toggleDiv1({{forloop.counter}})" class="allproductssee-btn">
+                      Mahsulotlarni ko'rish
+                    </button>
+                  </div>
+                <!-- hardoim shu idni ohirgi raqamini o'zgariring "orderproduct1" -->
+                    <div class="cart-products  " id="orderproductnow{{forloop.counter}}" style="border-top: 1px solid var(--border-color); display: none;">
+                      {% for product in order.items.all %}
+                      <div class="cartproduct" style="border: none;">
+                        <div class="cart-content">
+                          <a href="{% url "main:product_detail" product_id=product.product.id %}" class="cartp-img">
+                            <img class="cartp-img" src="{{product.product.get_banner_image.image.url}}" alt="">
+      
+      
+                          </a>
+                          <div class="ccr">
+                            <h3 class="carth3 cartp-name" style="overflow: auto;text-wrap: wrap;">{{product.product.name}}
+                            </h3>
+                            <ul class="ul">
+                              <li style="display: flex;justify-content: space-between;flex-wrap: wrap;">
+                                <h4 class="sellerh4"><span>Sotuvchi:</span> {{product.product.seller}}</h4>
+      
+                                <div style="margin-left: 1%;text-wrap: nowrap;" class="checkout-h5">miqdori: {{product.quantity}} dona</div>
+      
+      
+      
+      
+                              </li>
+                              <li>
+                                <div class="pricess">
+                                  <div class="carth3 item">{{product.product.get_discounted_price}} so’m</div>
+                                  {% if product.product.discount %}
+                                  <div class="sellerh4 item"
+                                  style="text-decoration: line-through;color: var(--grey-color);">{{product.product.get_format_price}} so’m
+                                  </div>
+                                  {% endif %}
+                                </div></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <hr style="width: 96%;margin: auto; border: 0.5px solid var(--border-color);">
+                      {% endfor %}
+                    </div>
+                    
+                  </div>
+              {% endfor %}
+        </div>
+
+          </div>
+          <div id="div2" class="profile-content login-dn ">
+            <form action="{% url "account:profile" %}" method="post" id="myForm" class="userinfo">
+              {% csrf_token %}
+              <div class="new-h2">
+                Ma’lumotlarim</div>
+              <ul class="user-data-inputs ">
+                <li>
+                  <p class="inp-name">Ism<span>*</span></p>
+                  <input class="userdata-input" name="first_name" value="{% if user.first_name %}{{ user.first_name }}{% endif %}" type="text">
+                </li>
+                <li>
+                  <p class="inp-name">Familya<span>*</span></p>
+                  <input class="userdata-input" name="last_name" value="{% if user.last_name %}{{ user.last_name }}{% endif %}" type="text">
+                </li>
+                <li>
+                  <p class="inp-name">Manzil<span>*</span></p>
+                  <input class="userdata-input" name="address" value="{% if user.address %}{{user.address}}{% endif %}" type="text">
+                </li>
+                <li>
+                  <p class="inp-name">Jins<span>*</span></p>
+                  <ul class="jins">
+                    {% if user.gender == "male" %}
+                    <li class="male">
+                      <input checked id="maleCheckbox" onclick="setGender()" type="radio" value="male" name="gender1">
+                      <p>Erkak</p>
+                    </li>
+                    <li class="female">
+                      <input type="radio" id="femaleCheckbox" onclick="setGender()" value="female" name="gender1">
+                      <p>Ayol</p>
+                    </li>
+                    {% elif user.gender == "female" %}
+                    <li class="male">
+                      <input id="maleCheckbox" onclick="setGender()" type="radio" value="male" name="gender1">
+                      <p>Erkak</p>
+                    </li>
+                    <li class="female">
+                      <input checked type="radio" id="femaleCheckbox" onclick="setGender()" value="female" name="gender1">
+                      <p>Ayol</p>
+                    </li>
+                    {% else %}
+                    <li class="male">
+                      <input checked id="maleCheckbox" onclick="setGender()" type="radio" value="male" name="gender1">
+                      <p>Erkak</p>
+                    </li>
+                    <li class="female">
+                      <input type="radio" id="femaleCheckbox" onclick="setGender()" value="female" name="gender1">
+                      <p>Ayol</p>
+                    </li>
+                    {% endif %}
+                  </ul>
+                </li>
+                <li id="email-ul">
+                  <p class="inp-name">Elektron pochta<span>*</span></p>
+                  <input class="userdata-input" name="email" type="email" id="email" value="{% if user.email %}{{user.email}}{% endif %}">
+                </li>
+              </ul>
+              <div style="display: flex;justify-content: space-between;">
+                  <a href="{% url "account:logout" %}" style="color:black;" class="profilelogout">Tizimdan chiqish</a>
+                
+                <button type="submit" id="saveButton" class="save-button locate-open-btn">Saqlash</button>
+              </div>
+              {% if user.gender == "male" %}
+              <input type="hidden" id='gender' name="gender" value="male">
+              {% elif user.gender == "female" %}
+              <input type="hidden" id='gender' name="gender" value="female">
+              {% else %}
+              <input type="hidden" id='gender' name="gender">
+              {% endif %}
+            </form>
+          </div>
+          <div id="div3" class="profile-content login-dn ">
+            <h2 class="new-h2">Joylashuv</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d2480.5826966014756!2d72.35472494813231!3d40.8245343980527!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNDDCsDQ5JzI4LjIiTiA3MsKwMjEnMjAuNCJF!5e1!3m2!1sru!2s!4v1733156619860!5m2!1sru!2s" width="100%" height="450px" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <div id="div4" class="profile-content login-dn ">
+            <h2 class="new-h2">Bizning ijtimoiy tarmoqlarimiz</h2>
+            <div class="allbrandss">
+              <a href="https://t.me/UzToysShopbot" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://www.instagram.com/uztoysshop" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/uztoysshop"><i class="fa-brands fa-facebook" target="_blank"></i></a>
+            <a href="https://youtube.com/@uztoysshop"><i class="fa-brands fa-youtube" target="_blank" ></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </main>
+  {% endblock content %}

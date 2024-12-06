@@ -1,0 +1,95 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Hisob Yaratish!</h1>
+                            </div>
+                            <form class="user" method="post" action="{% url "dashboard:register" %}">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
+                                            placeholder="Ismingiz" name="first_name">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
+                                            placeholder="Familiyangizni" name="last_name">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                            placeholder="Elektron pochta" name="email">
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="exampleInputPhone"
+                                            placeholder="Telfon raqam" value="+998" min="18" max="20" name="phone_number">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="password" class="form-control form-control-user"
+                                            id="exampleInputPassword" name="password" placeholder="Parol">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="password" class="form-control form-control-user"
+                                            id="exampleRepeatPassword" name="confirm_password" placeholder="Parolni takrorlang">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Hisob Yaratish
+                                </button>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="{% url "dashboardL:login" %}">Alaqachon hisobim bor, Tizimga Kirish!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}
+{% block script %}
+<script>
+    document.getElementById('exampleInputPhone').addEventListener("input", function (e) {
+        let input = e.target.value.replace(/\D/g, ""); // Faqat raqamlarni olib qolamiz
+      
+        // +998 ni saqlab qolish
+        if (input.startsWith("998")) {
+          input = input.substring(3); // 998 ni olib tashlaymiz
+        }
+      
+        // Formatlash
+        let formattedNumber = "+998";
+        if (input.length > 0) {
+          formattedNumber += " (" + input.substring(0, 2); // 90-99 kodlar uchun
+        }
+        if (input.length >= 3) {
+          formattedNumber += ") " + input.substring(2, 5);
+        }
+        if (input.length >= 6) {
+          formattedNumber += "-" + input.substring(5, 7);
+        }
+        if (input.length >= 8) {
+          formattedNumber += "-" + input.substring(7, 9);
+        }
+      
+        // Inputni yangilash
+        e.target.value = formattedNumber;
+      
+        // Xatoni yashirish (to'g'ri format kiritilganda)
+        errorMessage.style.display = "none";
+      });
+</script>
+{% endblock script %}

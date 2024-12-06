@@ -1,0 +1,128 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block css %}
+<style>
+    .list-group-item:hover {
+        background-color: #f8f9fa; /* Hover paytida fonga och kul rang qo'yiladi */
+        cursor: pointer; /* Ko'rsatgich pointerga o'zgaradi */
+        color: black;
+        text-decoration: none;
+    }
+</style>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/theme-classic.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+{% endblock css %}
+{% block content %}
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include 'dashboard/navbar.html' %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                {% include "dashboard/navbar2.html" %}
+
+                <!-- End of Topbar -->
+                <div class="container mt-4">
+                    <h1 class="h3 mb-2 text-gray-800">Sotuvchilar</h1>
+                    <p class="mb-4">Bu sahifada siz barcha hodimlarni ko'rishingiz va topshirishingiz mumkin.</p>
+                    <div class="list-group">
+                        <a href="{% url "dashboard:profile" %}?id={{boss.id}}" class="list-group-item d-flex align-items-center">
+                            <img src="{% if boss.picture %}{{boss.picture.url}} {% else %} https://cdn-icons-png.flaticon.com/512/10845/10845690.png{% endif %}" alt="Avatar" class="rounded-circle" width="40" height="40">
+                            <div class="ms-3">
+                                <strong>{{boss.first_name}} {{boss.last_name}}</strong>
+                                <p class="mb-1">Boss</p>
+                            </div>
+                            
+                        </a>
+                    </div><br>
+                    <div class="list-group">
+                        {% for seller in sellers %}
+                        <div href="{% url "dashboard:profile" %}?id={{seller.id}}" class="list-group-item d-flex align-items-center">
+                            <img src="{% if seller.picture %}{{seller.picture.url}}{% else %}https://cdn-icons-png.flaticon.com/512/10845/10845690.png{% endif %}" alt="Avatar" class="rounded-circle" width="40" height="40">
+                            <div class="ms-3">
+                                <strong>{{seller.first_name}} {{seller.last_name}}</strong>
+                                <p class="mb-1">{% if seller.role == "seller" %}Sotuvchi{% else %}Admin{% endif %}</p>
+                            </div>
+                                <a href="{% url "dashboard:delete_user" pk=seller.id %}"  class="btn btn-sm btn-outline-danger ms-auto">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+
+    <!-- Page level plugins -->
+    <script src="{% static "admin/vendor/chart.js/Chart.min.js" %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static "admin/js/demo/chart-area-demo.js" %}"></script>
+    <script src="{% static "admin/js/demo/chart-pie-demo.js" %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+{% endblock script %}

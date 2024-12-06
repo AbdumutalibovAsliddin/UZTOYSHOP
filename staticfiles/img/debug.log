@@ -1,0 +1,2 @@
+[784:9060:1020/113339.241:VERBOSE1:installer.cc(429)] "C:\Users\1234\Desktop\toysshop\img\ChromeSetup.exe" --install=appguid={401C381F-E0DE-4B85-8BD8-3F3F14FBDA57}&iid={9A567015-BB8C-C1AF-4FC2-483E6AC6B9AE}&lang=en&browser=4&usagestats=1&appname=Google%20Chrome%20Dev&needsadmin=prefers&ap=x64-statsdef_1&installdataindex=empty --enable-logging --vmodule=*/components/winhttp/*=1,*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[784:9060:1020/113345.865:VERBOSE1:installer.cc(538)] Metainstaller WMain returned: 73500, Windows error: 0

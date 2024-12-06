@@ -1,0 +1,269 @@
+{% load static %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Dashboard</title>
+  <!-- Bootstrap core CSS -->
+  <link href="{% static "admin/vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="{% static "admin/css/sb-admin-2.min.css" %}" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link href="{% static "admin/vendor/fontawesome-free/css/all.min.css" %}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="{% static "admin/vendor/bootstrap-tagsinput/css/bootstrap-tagsinput.css" %}">
+  <link
+      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7fa;
+        }
+
+    </style>
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+      <!-- Sidebar -->
+      {% include 'dashboard/navbar.html' %}
+      <!-- End of Sidebar -->
+
+      <!-- Content Wrapper -->
+      <div id="content-wrapper" class="d-flex flex-column">
+        
+
+                        <!-- Topbar -->
+                        {% include "dashboard/navbar2.html" %}
+
+                      <!-- End of Topbar -->
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <form method="post" class="col-12 col-md-10 col-lg-8">
+        {% csrf_token %}
+        <div class="card shadow-lg">
+          <img src="{{product.get_banner_image.image.url}}" style="width:250px;" class="card-img-top" alt="Product Image">
+          <div class="card-body p-3">
+            <h5 class="card-title fs-3 fw-bold">{{product.name}}</h5>
+            <p class="card-text fs-4">ID raqami: <span class="fw-bold">{{product.id}}</span></p> <!-- ID raqami qo'shildi -->
+            <p class="card-text fs-4">Sotuvchi: <span class="fw-bold">{{product.seller}}</span></p> <!-- Sotuvchi qo'shildi -->
+            <p class="card-text fs-4">Narxi: <span class="fw-bold" id="price">{{product.get_discounted_price}}</span> so'm</p>
+            <p class="card-text fs-4">Kategoriyasi: <span class="fw-bold">{% for category in product.category.all %}{{category.name}}, {% endfor %}</span></p>
+            <p class="card-text fs-4">Brendi: <span class="fw-bold">{{product.brend.name}}</span></p>
+
+            <!-- Ranglar tanlash -->
+            <label for="color" class="fs-5">Rang:</label>
+            <select name="color" id="color" class="form-control fs-4" oninput="calculateTotal()" onchange="changeColor(this)">
+            {% for color in product.colors.all %}
+                {% if color.stock_quantity %}
+                <option color="{{color.color.color_code}}" style="color:{{color.color.color_code}} !important;" data-quantity="{{color.stock_quantity}}" value="{{color.id}}" class="text-success">{{color.color.name}} ({{color.stock_quantity}})</option>
+                {% else %}
+                <option value="{{color.id}}" data-quantity="{{color.stock_quantity}}" class="text-muted" disabled>{{color.color.name}}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <!-- Tugagan rang (faqat ko'rinadi) -->
+            {% if product.sold_out %}
+            <p class="mt-3 fs-4">Tugagan ranglar: 
+                {% for color in product.sold_out %}
+                    <span class="text-muted text-strikethrough" style="text-decoration: line-through red 3px;">{{color.color.name}},</span>
+                {% endfor %}
+            </p>
+            {% endif %}
+            <br>
+            <label for="color" class="fs-5">Miqdori:</label>
+            <input type="number" name="quantity" id="quantity" value="1" class="form-control fs-4" placeholder="Miqdor..." min="1" oninput="calculateTotal()" required>
+
+            <p class="fs-4">Jami narx: <span class="fw-bold" id="total">{{product.final_price}}</span> so'm</p>
+            <div class="p-2 row justify-content-between">
+              <a href="http://127.0.0.1:8000/dashboard/" class="col-5">
+                <button type="button" class="btn btn-danger mt-4  fs-5 w-100">Bekor qilish</button>
+              </a><br>
+              <!-- Tasdiqlash tugmasi -->
+              <button class="btn btn-primary mt-4 fs-5 col-5">Tasdiqlash</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div><br>
+  </div>
+  <script>
+    function calculateTotal() {
+        //select uchun
+        const select = document.getElementById('color');
+        const selectedOption = select.options[select.selectedIndex];
+        const value = selectedOption.value; // Tanlangan qiymat
+        const color = selectedOption.getAttribute('color'); // "color" atributi
+        const stock_quantity = selectedOption.getAttribute('data-quantity'); // "data-quantity" atributi
+        const text = selectedOption.text; // Matn (masalan, "Sariq")
+        const price = parseInt(document.getElementById('price').textContent.replace(' ', '')); // Narxni olish
+        let quantity = parseInt(document.getElementById('quantity').value); // Miqdorni olish
+        if (quantity > stock_quantity) {
+            console.log("Mahsulot yetarli emas");
+            quantity = stock_quantity;
+            document.getElementById('quantity').value = stock_quantity;
+        } else if (quantity < 1) {
+            quantity = 1;
+            document.getElementById('quantity').value = 1;
+        } else {
+            console.log('Mahsulot yetarli');
+            console.log(document.getElementById('quantity').value)
+        }
+
+        const total = price * (quantity || 0); // Jami narxni hisoblash (miqdor bo'sh bo'lsa, 0 qilinadi)
+        
+        // Jami narxni ko'rsatish
+        document.getElementById('total').textContent = total.toLocaleString('uz-UZ');
+    }
+
+
+  select.addEventListener('change', function () {
+    const selectedOption = select.options[select.selectedIndex];
+    const value = selectedOption.value; // Tanlangan qiymat
+    const color = selectedOption.getAttribute('color'); // "color" atributi
+    const quantity = selectedOption.getAttribute('data-quantity'); // "data-quantity" atributi
+    const text = selectedOption.text; // Matn (masalan, "Sariq")
+
+    console.log(`Qiymat: ${value}, Rang: ${color}, Miqdor: ${quantity}, Matn: ${text}`)
+  });
+  function changeColor(select) {
+    const selectedOption = select.options[select.selectedIndex];
+    select.style.color = selectedOption.style.color;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+  <div class="container my-auto">
+      <div class="copyright text-center my-auto">
+          <span>Mualliflik huquqi &copy; Sizning Saytingiz 2025</span>
+      </div>
+  </div>
+</footer>
+<!-- End of Footer -->
+
+</div>
+<!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+<i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+  <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Chiqishga tayyormisiz?</h5>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Yopish">
+          <span aria-hidden="true">×</span>
+      </button>
+  </div>
+  <div class="modal-body">Agar hozirgi sessiyani tugatishga tayyor bo'lsangiz, quyidagi "Chiqish"
+      tugmasini bosing.</div>
+  <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" data-dismiss="modal">Bekor qilish</button>
+      <a class="btn btn-primary" href="login.html">Chiqish</a>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+<script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{% static "vendor/jquery-easing/jquery.easing.min.js" %}"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="{% static "js/sb-admin-2.min.js" %}"></script>
+
+<!-- Page level plugins -->
+<script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
+<script src="{% static "vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static "js/demo/datatables-demo.js" %}"></script>
+
+</body>
+
+</html>

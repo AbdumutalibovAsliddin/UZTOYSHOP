@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% if not oneclick %}
+<main>
+
+    <div class="container">
+
+        <h2 class="new-h2">Buyurtmani rasmiylashtirish</h2><br>
+
+        <form method="post" onsubmit="crateOreder(event)" id="CreateOrder" class="checkout-section">
+
+            <div class="checkout-left-content">
+                <div class="user-data">
+                   
+                    <div class="checkout-h3">Buyurtma qabul qiluvchi:</div>
+                    <ul class="user-data-inputs">
+                        <li>
+                            <p class="inp-name">Ism<span>*</span></p>
+                            <input class="userdata-input" value="{% if user.first_name %}{{ user.first_name }}{% endif %}" required type="text">
+                        </li>
+                        <li>
+                            <p class="inp-name">Familya<span>*</span></p>
+                            <input class="userdata-input"  value="{% if user.last_name %}{{ user.last_name }}{% endif %}" required type="text">
+                        </li>
+                        <li>
+                            <p class="inp-name ">Telefon raqami<span>*  </span></p>
+                            <input class="userdata-input {% if user.phone_number %}inp-phone-number{% endif %}" value="{% if user.phone_number %}{{ user.phone_number }}{% endif %}" maxlength="10" required type="number">
+                        </li>
+                        <li>
+                            <p class="inp-name">Manzil<span>*</span></p>
+                            <button type="button" style="width: 100%;margin: 10px 0;" class="locate-open-btn" onclick="enterAdress(this)">Joylashuvni kiritish</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="checkout-h4">Yetkazib beramiz <span id="nextWeekDate">25-oktabr</span></div><br>
+
+                <div class="cart-products" style="border: none;">
+                    {% for item in cart_items %}
+                    <div class="cartproduct">
+                        <div class="cart-content">
+                            <input type="hidden" name="product_id" value="{{item.product.id}}">
+                            <input type="hidden" name="product_quantity" value="{{item.quantity}}">
+                            <input type="hidden" name="product_color" value="{{item.color.id}}">
+                            <input type="hidden" name="total_price" value="{{total_price}}">
+                            <a href="{% url "main:product_detail" item.product.id %}" class="cartp-img">
+                                <img class="cartp-img" src="{{ item.product.get_banner_image.image.url }}" alt="">
+
+
+                            </a>
+                            <div class="ccr">
+                                <h3 class="carth3 cartp-name">{{item.product.name}}
+                                </h3>
+                                <ul class="ul">
+                                    <li style="display: flex;justify-content: space-between;flex-wrap: wrap;">
+                                        <h4 class="sellerh4"><span>Sotuvchi: </span>{{ item.product.seller }}</h4><br>
+                                        
+                                        <div style="margin-left: 1%;text-wrap: nowrap;" class="checkout-h5">Miqdori:
+                                            {{item.quantity}} dona<br>Rang: <i class="fa" style="color:{{item.color.color.color_code}};">&#xf111</i> {{ item.color.color.name }}</div>
+                                    </li>
+                                    <li>
+                                        <div class="pricess">
+                                            {% if item.product.discount %}
+                                            <div class="carth3 item">{{ item.product.get_discounted_price }} so’m</div>
+                                            <div class="sellerh4 item"
+                                                style="text-decoration: line-through;color: var(--grey-color);">{{item.product.get_format_price}} so’m</div>
+                                            {% else %}
+                                            
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div style="margin-top: 15px;" class="checkout-right-content">
+                <div class="checkout-price">
+                    <div class="checkout-h4">Buyurtmangiz</div>
+                    <ul>
+                        <li style="display: flex;justify-content: space-between;">
+                            <div style="color: var(--grey-color);" class="checkout-h5">Mahsulotlar ({{total_quantity}}):</div>
+                            <div class="checkout-h5">{{total_price}} so'm</div>
+                        </li>
+                        <li style="display: flex;justify-content: space-between;">
+                            <div style="color: var(--grey-color);" class="checkout-h5">Yetkazib berish narhi:</div>
+                            <div class="checkout-h5">Bepul</div>
+                        </li>
+                    </ul>
+
+                </div>
+                <br>
+                <div class="cashcard">
+                    <li><button class="money">
+                            <input checked type="radio" name="money" id="hideDiv"  >
+                            <p>Naqd pul</p>
+                        </button></li>
+                    <li><button class="karta" >
+                            <input type="radio"  name="money"  id="showDiv" >
+                            <p>Karta</p>
+                        </button></li>
+                </div>
+                <ul class="onlinepayment" style="display: none;" id="myDiv">
+                    <li>Tez Orada</li>
+                    {% comment %} <li>
+                        <a href="#">
+                            <img src="{% static "img/clickup.png" %}" alt="">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="{% static "img/payme.png" %}" alt="">
+                        </a>
+                    </li> {% endcomment %}
+                </ul>
+                <button type="submit" style="width: 100%;margin: 10px 0;" class="locate-open-btn create-order">
+                    Jo'natish
+                </button>
+
+            </div>
+        </form>
+
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <h2>Manzilni Tasdiqlash</h2>
+            <!-- 10 ta so'zdan iborat lorem -->
+            <div>
+                <p>Manzilingizni tasdiqlash uchun quyidagi tugmani bosing va Telegram bot orqali tasdiqlang.</p>
+            </div>
+            <!-- URL havolasi -->
+            <div class="mt-4">
+                <a class="locatation-url" onclick="return openInNewTabAndHide(this);" href="https://www.example.com" target="_blank">Havolaga o'tish</a>
+            </div>
+        </div>
+    </div>
+</main>
+{% else %}
+    <main>
+        <div class="container">
+
+            <h2 class="new-h2">Buyurtmani rasmiylashtirish</h2><br>
+
+            <form method="post" onsubmit="crateOreder(event)" id="CreateOrder" class="checkout-section">
+
+                <div class="checkout-left-content">
+                    <div class="user-data">
+                        <div class="checkout-h4">Qabul qilish usuli va yetkazib berish manzili:</div>
+                        
+                       
+                        <div class="checkout-h3">Buyurtma qabul qiluvchi:</div>
+                        <ul class="user-data-inputs">
+                            <li>
+                                <p class="inp-name">Ism<span>*</span></p>
+                                <input class="userdata-input" value="{% if user.first_name %}{{ user.first_name }}{% endif %}" required type="text">
+                            </li>
+                            <li>
+                                <p class="inp-name">Familya<span>*</span></p>
+                                <input class="userdata-input"  value="{% if user.last_name %}{{ user.last_name }}{% endif %}" required type="text">
+                            </li>
+                            <li>
+                                <p class="inp-name ">Telefon raqami<span>*  </span></p>
+                                <input class="userdata-input {% if user.phone_number %}inp-phone-number{% endif %}" value="{% if user.phone_number %}{{ user.phone_number }}{% endif %}" maxlength="10" required type="number">
+                            </li>
+                            <li>
+                                <p class="inp-name">Manzili<span>*</span></p>
+                                <button type="button" onclick="enterAdress(this)"  class="btn-manzil btn-more locate-open-btn">
+                                    Manzil
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="checkout-h4">Yetkazib beramiz <span id="nextWeekDate">25-oktabr</span></div><br>
+
+                    <div class="cart-products" style="border: none;">
+                        {% for item in cart_items %}
+                        <input type="hidden" name="product_id" value="{{item.id}}">
+                        <input type="hidden" name="product_quantity" value="{{total_quantity}}">
+                        <input type="hidden" name="product_color" value="{{color.id}}">
+                        <input type="hidden" name="total_price" value="{{total_price}}">
+                        <div class="cartproduct">
+                            <div class="cart-content">
+                                <a href="{% url "main:product_detail" item.id %}" class="cartp-img">
+                                    <img class="cartp-img" src="{{ item.get_banner_image.image.url }}" alt="">
+
+
+                                </a>
+                                <div class="ccr">
+                                    <h3 class="carth3 cartp-name">{{item.name}}
+                                    </h3>
+                                    <ul class="ul">
+                                        <li style="display: flex;justify-content: space-between;flex-wrap: wrap;">
+                                            <h4 class="sellerh4"><span>Sotuvchi:</span>{{ item.seller }}</h4><br>
+                                            
+                                            <div style="margin-left: 1%;text-wrap: nowrap;" class="checkout-h5">Miqdori:
+                                                {{total_quantity}} dona<br>Rang: <i class="fa" style="color:{{color.color.color_code}};">&#xf111</i> {{ color.color.name }}</div>
+                                        </li>
+                                        <li>
+                                            <div class="pricess">
+                                                {% if item.discount %}
+                                                <div class="carth3 item">{{ item.get_discounted_price }} so’m</div>
+                                                <div class="sellerh4 item"
+                                                    style="text-decoration: line-through;color: var(--grey-color);">{{item.get_format_price}} so’m</div>
+                                                {% else %}
+                                                
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div style="margin-top: 15px;" class="checkout-right-content">
+                    <div class="checkout-price">
+                        <div class="checkout-h4">Buyurtmangiz</div>
+                        <ul>
+                            <li style="display: flex;justify-content: space-between;">
+                                <div style="color: var(--grey-color);" class="checkout-h5">Mahsulotlar ({{total_quantity}}):</div>
+                                <div class="checkout-h5">{{total_price}} so'm</div>
+                            </li>
+                            <li style="display: flex;justify-content: space-between;">
+                                <div style="color: var(--grey-color);" class="checkout-h5">Yetkazib berish narhi:</div>
+                                <div class="checkout-h5">Bepul</div>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <br>
+                    <div class="cashcard">
+                        <li><button class="money">
+                                <input checked type="radio" name="money" id="hideDiv"  >
+                                <p>Naqt pul</p>
+                            </button></li>
+                        <li><button class="karta" >
+                                <input type="radio"  name="money"  id="showDiv" >
+                                <p>karta</p>
+                            </button></li>
+                    </div>
+                    <ul class="onlinepayment" style="display: none;" id="myDiv">
+                        <li>Tez orada</li>
+                        {% comment %} <li>
+                            <a href="#">
+                                <img src="{% static "img/clickup.png" %}" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="{% static "img/payme.png" %}" alt="">
+                            </a>
+                        </li> {% endcomment %}
+                    </ul>
+                    <button type="submit" style="width: 100%;margin: 10px 0;" class="locate-open-btn">
+                        Jo'natish
+                    </button>
+
+                </div>
+            </form>
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <h2>Manzilni Tasdiqlash</h2>
+                    <!-- 10 ta so'zdan iborat lorem -->
+                    <div>
+                        <p>Manzilingizni tasdiqlash uchun quyidagi tugmani bosing va Telegram bot orqali tasdiqlang.</p>
+                    </div>
+                    <!-- URL havolasi -->
+                    <div class="mt-4">
+                        <a class="locatation-url" onclick="return openInNewTabAndHide(this);" href="https://www.example.com" target="_blank">Havolaga o'tish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endif %}
+<script>
+    const today = new Date();
+
+        // Bir hafta qo'shish
+        const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        // Oylar ro'yxati
+        const monthNames = [
+            "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+            "Iyul", "Avgust", "Sentyabr", "Oktabr", "Noyabr", "Dekabr"
+        ];
+
+        // Formatlash
+        const formattedDate = `${nextWeek.getDate()}-${monthNames[nextWeek.getMonth()]}`;
+
+        // Barcha `id="nextWeekDate"` elementlarini olish
+        const dateElements = document.querySelectorAll('#nextWeekDate');
+
+        // Har bir element uchun textni o'rnatish
+        dateElements.forEach(element => {
+            element.textContent = formattedDate;
+        });
+</script>
+{% endblock content %}

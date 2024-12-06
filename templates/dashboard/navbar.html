@@ -1,0 +1,88 @@
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Yon panel - Brend -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url "dashboard:home" %}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Uz Toys Shop <sup>Paneli</sup></div>
+    </a>
+
+    <!-- Bo'sh joy -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Navigatsiya elementi - Boshqaruv paneli -->
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url "dashboard:home" %}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Boshqaruv paneli</span></a>
+    </li>
+
+    <!-- Bo'sh joy -->
+    <hr class="sidebar-divider">
+
+    <!-- Sarlavha -->
+    <div class="sidebar-heading">
+        Interfeys
+    </div>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url "dashboard:seller_view" %}">
+            <i class="fa fa-user" aria-hidden="true"></i>
+            <span>Sotuvchilar</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url "dashboard:barcode_view" %}">
+            <i class="fas fa-solid fa-barcode" aria-hidden="true"></i>
+            <span>Barcode Qidiruv</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url "dashboard:contact_view" %}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Fikrlar</span></a>
+    </li>
+   
+    <!-- Navigatsiya elementi - Sahifalar qisqarishi menyusi -->
+    
+
+    <!-- Navigatsiya elementi - Foydalanish uchun qisqarish menyusi -->
+   
+
+    <!-- Bo'sh joy -->
+    <hr class="sidebar-divider">
+
+    <!-- Sarlavha -->
+    <div class="sidebar-heading">
+        Qo'shimchalar
+    </div>
+
+    <!-- Navigatsiya elementi - Sahifalar qisqarishi menyusi -->
+
+    <!-- Navigatsiya elementi - Diagrammalar -->
+   
+    <!-- Navigatsiya elementi - Jadvallar -->
+    <li class="nav-item">
+        <a class="nav-link" href="{% url "dashboard:product_list" %}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Mahsulotlar</span></a>
+    </li>
+    <!-- Navigatsiya elementi - Jadvallar -->
+    <li class="nav-item">
+        <a class="nav-link" href="{% url "dashboard:orders_view" %}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Buyurtmalar</span></a>
+    </li>
+    <!-- Navigatsiya elementi - Buyurtmalar -->
+
+
+    <!-- Bo'sh joy -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Yon panelni o'zgartirish tugmasi -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+    <!-- Yon panel xabari -->
+    
+
+</ul>

@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Uz Toys Shop Admin</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "admin/vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static "admin/css/sb-admin-2.min.css" %}" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+      <meta name="csrf-token" content="{{ csrf_token }}">
+    <link href="{% static "admin/vendor/fontawesome-free/css/all.min.css" %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static "admin/vendor/bootstrap-tagsinput/css/bootstrap-tagsinput.css" %}">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    {% block css %}{% endblock css %}
+    <style>
+      .alert-container {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 1050;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+      }
+
+      .custom-alert {
+          animation: fadeInOut 3s;
+          font-size: 1rem; /* Standart o‘lcham */
+          padding: 15px;
+      }
+
+      /* Kichik ekranlar uchun o‘lchamni kamaytirish */
+      @media (max-width: 767px) {
+          .custom-alert {
+              font-size: 0.875rem; /* Kichikroq shrift */
+              padding: 10px; /* Kamroq joy */
+          }
+      }
+
+      @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateY(-10px); }
+          10%, 90% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-10px); }
+      }
+  </style>
+</head>
+
+<body id="page-top" {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}class="bg-gradient-primary sidebar-toggled"{% endif %}>
+
+
+{% block content %}{% endblock content %}
+
+<!-- Bootstrap asosiy JavaScript-->
+<script src="{% static 'admin/vendor/jquery/jquery.min.js' %}"></script>
+
+<!-- Bootstrap JS -->
+<script src="{% static 'admin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Asosiy plagin JavaScript -->
+<script src="{% static 'admin/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+<!-- Barcha sahifalar uchun maxsus skriptlar -->
+<script src="{% static 'admin/js/sb-admin-2.min.js' %}"></script>
+
+<!-- Alert Container -->
+<div class="alert-container" id="alertContainer"></div>
+
+<script>
+  const alertContainer = document.getElementById('alertContainer');
+
+  // Barcha tugmalarni topish
+  const alertButtons = document.querySelectorAll('.alert-btn');
+
+  // Har bir tugmaga bosish hodisasini biriktirish
+  function message(text,status){
+        // Yangi alert yaratish
+        const newAlert = document.createElement('div');
+        if(status){
+            newAlert.className = 'alert alert-success custom-alert';
+        }
+        else{
+            newAlert.className = 'alert alert-danger custom-alert';
+
+        }
+        newAlert.textContent = text;
+
+        // Alertni konteynerga qo'shish
+        alertContainer.appendChild(newAlert);
+
+        // 3 soniyadan keyin alertni o'chirish
+        setTimeout(() => {
+            newAlert.remove();
+        }, 3000);
+  }
+  {% if messages %}
+      {% for message in messages %}
+        {% if message.tags == "success" %}
+            message("{{ message }}",true)
+        {% else %}
+            message("{{message }}",false)
+        {% endif %}
+      {% endfor %}
+  {% endif %}
+  {% if form.errors %}
+    {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        message("{{ error }}",false)
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+{% if product_form.errors %}
+    {% for field, errors in product_form.errors.items %}
+        {% for error in errors %}
+        message("{{ error }}",false)
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+{% if image_formset.errors %}
+    {% for field, errors in image_formset.errors.items %}
+        {% for error in errors %}
+        message("{{ error }}",false)
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+{% if color_formset.errors %}
+    {% for field, errors in color_formset.errors.items %}
+        {% for error in errors %}
+        message("{{ error }}",false)
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+</script>
+
+
+{% block script %}{% endblock script %}
+
+<script src="{% static "admin/vendor/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js" %}"></script>

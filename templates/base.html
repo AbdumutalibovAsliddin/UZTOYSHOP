@@ -1,0 +1,283 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static "css/swiper-bundle.min.css" %}" />
+  <link rel="stylesheet" href="{% static "css/style.css" %}" />
+  <link rel="stylesheet" href="{% static "css/responsive.css" %}" />
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="isAuthenticated" content="{{ user.is_authenticated|yesno:"true,false" }}">
+  <title>UzToysShop - {% block title %}{% endblock title %}</title> 
+</head>
+
+<body>
+  <header>
+    <!-- locate start  -->
+    <div class="locate">
+      <div class="container">
+        <div class="location">
+          <div>
+            <img src="{% static "img/locate.png" %}" alt="" />
+            <p>Shahar <a href="https://www.google.com/maps/dir//40.8245,72.3556667/@40.8245,72.3556667,17z" target="_blank">Andijon</a></p>
+          </div>
+          <div>
+            <img src="{% static "img/checklist 1.png" %}" alt="" />
+            <p><a href="{% url "account:profile" %}">Buyurtmalarim</a></p>
+            <img src="img/qo'llab quvvatlash.png" alt="" />
+            <p><a href="{% url "main:contact" %}">Qo'llab-quvvatlash</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- locate end -->
+    <div class="container">
+      <!-- navbar start  -->
+      <nav class="navbar">
+        <a href="{% url "main:home" %}" class="logo">
+          <img src="{% static "img/logo.png" %}" alt="logo" />
+          <h2>Uz Toys Shop</h2>
+        </a>
+        <ul class="menu">
+          <li class="search">
+            <form class="search" method="get" action="{% url "main:product_list" %}">
+              <input class="search-input" name="q" type="text" placeholder="Qidirish..." autocomplete="off"/>
+              <ul class="search-content"></ul>
+              <button type="submit" class="search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </form>
+          </li>
+          <li class="li-dn">
+            {% if request.user.is_authenticated %}
+            <a onclick="checkHashTag()" href="{% url "account:profile" %}#profile" >
+              <button type="submit" class="profile-btn">
+                <i class="fa-solid fa-user"></i> Profil
+              </button>
+            </a>
+            {% else %}
+            <button type="submit" onclick="CancelLogin()" class="profile-btn">
+              <i class="fa-solid fa-right-to-bracket"></i> Kirish
+            </button>
+            {% endif %}
+            <a href="{% url "cart:cart" %}">
+              <button type="submit" class="card-btn">
+                <i class="fa fa-bag-shopping"></i> Savat
+                
+                <span class="note" {% if not cart_count %}style="display:none"{% endif %}>{{cart_count }}</span>
+                
+              </button>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- navbar end  -->
+</header>
+
+
+  {% block content %}{% endblock content %}
+  <br />
+  <footer>
+    <div class="container">
+      <div class="last-section">
+        <ul>
+          <li>
+            <h3>Sahifalar</h3>
+          </li>
+          <li><a href="{% url "main:home" %}">Bosh sahifa</a></li>
+          <li><a href="{% url "main:contact" %}">Bog'lanish</a></li>
+          <li><a href="{% url "main:product_list" %}">Mahsulotlar</a></li>
+        </ul>
+        <ul>
+          <li>
+            <h3>Biz haqimizda</h3>
+          </li>
+          <li><a href="{% url "account:profile" %}#locate" >Joylashuv</a></li>
+          <li><a href="https://t.me/uztoysshop_manager" >Aloqa</a></li>
+        </ul>
+        
+        <ul>
+          <li>
+            <h3>Shaxsiy sahifa</h3>
+          </li>
+          <li><a href="{% url "account:profile" %}#profile">Profil</a></li>
+          <li><a href="{% url "account:profile" %}">Buyurtmalarim</a></li>
+        </ul>
+        <ul>
+          <li>
+            <h3>Telegram ilovadan ochish</h3>
+          </li>
+          <li>
+            <a class="btn-more" style="background: rgba(10, 192, 232, 1); color: white" href="https://t.me/UzToysShopbot" target="_blank"><small><i
+                  class="fa-brands fa-telegram" style="font-size: 20px"></i></small>
+              Telegram ilovadan ochish</a>
+          </li>
+          <li>
+            <a href="https://t.me/UzToysShop1" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://www.instagram.com/uztoysshop" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/uztoysshop"><i class="fa-brands fa-facebook" target="_blank"></i></a>
+            <a href="https://youtube.com/@uztoysshop"><i class="fa-brands fa-youtube" target="_blank" ></i></a>
+          </li>
+        </ul>
+      </div>
+      <br>
+      <div class="lasttext" style="height:5px;margin-bottom:0px">
+        {% comment %} <hr style="border: 1px solid var(--border-color);" width="100%"><br> {% endcomment %}
+        <p style="text-align: center; ">«2025© «UzToysShop». Barcha huquqlar himoyalangan»</p>
+      </div>
+    </div>
+  </footer>
+  <br /><br /><br />
+
+
+  <div class="toast success" id="successToast" style="z-index:10000;">
+    <i class="fas fa-check-circle"></i> Mahsulot muvaffaqiyatli qo'shildi
+</div>
+<div class="toast error" id="errorToast" style="z-index:10000;">
+    <i class="fas fa-times-circle"></i> Mahsulot qo'shib bo'lmadi
+</div>
+
+
+
+<!-- FontAwesome icons uchun CDN -->
+{% comment %} <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> {% endcomment %}
+
+
+
+  <!-- responsive navbar start -->
+  <div class="navbar-2">
+    <ul class="icons">
+      <li class="icon">
+        <a href="{% url "main:home" %}" class="activenavbaricon"><i class="fa fa-house"></i></a>
+      </li>
+      <li class="icon">
+        <a href="{% url "main:product_list" %}" class="focus-btn"><i class="fa fa-magnifying-glass"></i></a>
+      </li>
+      <li class="icon">
+        <a href="{% url "cart:cart" %}"><i class="fa-solid fa-bag-shopping"></i><div class="note" {% if not cart_count %}style="display:none"{% endif %}>{{cart_count}}</div></a>
+      </li>
+      <li class="icon">
+        <a href="{% url "main:contact" %}"><i class="fa-solid fa-phone"></i></a>
+      </li>
+      {% if request.user.is_authenticated %}
+      <li class="icon">
+        <a href="{% url "account:profile" %}#profile"><i class="fa-solid fa-user"></i></a>
+      </li>
+      {% else %}
+      <li class="icon">
+        <a onclick="CancelLogin()" href="#"><i class="fa-solid fa-user"></i></a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+  <!-- responsive navbar end -->
+
+  <!-- login screen start  -->
+  <div class="login login-dn">
+    <div action="#" class="login-form" onsubmit="return validateUzbekNumber()">
+      <h2>Telefon raqamini kiriting</h2>
+      <h4>Tasdiqlash kodini SMS orqali yuboramiz</h4>
+      <input class="login-intput" type="text" id="phone" maxlength="19" value="+998 ">
+      <p id="error-message" style="display: none;"></p>
+
+      <button class="login-btn" onclick="validateUzbekNumber()" type="submit">Kod olish</button>
+      <button class="login-cancel" onclick="CancelLogin()" type="reset">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+  <div class="codelogin   login-dn">
+    <div action="{% url 'account:verify' user_id=0 %}" class="code-from">
+<p>Telefonni tasdiqlash uchun <strong>+998 90 571 60 15</strong> raqamiga <br>6 xonali kod yuborildi </p>
+      <input class="code-intput login-intput" type="text" id="code" maxlength="6" placeholder="XXXXXX" />
+      <p id="errorMessage" class="error-message">Kod noto'g'ri. Iltimos, qayta urinib ko'ring.</p>
+      <p id="successMessage" class="success-message">Kod to'g'ri!</p>
+      <button class="login-btn" id="sendButton" type="submit">Jo'natish</button>
+      <p id="timer" class="timer-text">Agar kod kelmasa, siz 60 soniya orqali yangisini olishingiz mumkin</p>
+
+    </div>
+  </div>
+  <!-- login screen end  -->
+  <script src="{% static "js/swiper-element-bundle.min.js" %}"></script>
+  <script src="{% static "js/script.js" %}"></script>
+  <script src="{% static "js/login.js" %}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    {% if messages %}
+      {% for message in messages %}
+      {% if message.tags == "success" %}
+      showMessage(true,"{{message}}")
+      {% else %}
+      showMessage(false,"{{message}}")
+      {% endif %}
+      {% endfor %}
+    });
+    {% endif %}
+  </script>
+
+  <script>
+    // Local storage'dan qidiruv tarixini olish yoki bo'sh array yaratish
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+  
+    // search-content ichidagi qiymatlarni yangilash funksiyasi
+    function updateSearchContent() {
+      const searchContent = document.querySelector('.search-content');
+      searchContent.innerHTML = ''; // Eski elementlarni tozalash
+  
+      // Faqat eng oxirgi 5 ta elementni tanlash uchun slice metodi
+      searchHistory.slice(0, 5).forEach((item, index) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `{% url "main:product_list" %}?q=` + encodeURIComponent(item);
+        a.textContent = item;
+        li.appendChild(a);
+  
+        // Font Awesome "X" ikonkasini qo'shish
+        const removeBtn = document.createElement('i');
+        removeBtn.classList.add('fa', 'fa-times'); // Font Awesome ikonka klasslari
+        removeBtn.style.cursor = 'pointer';
+        removeBtn.style.marginLeft = '10px';
+        removeBtn.style.color = 'red';
+        
+        // "X" ikonka bosilganda qidiruv tarixidan o'chirish
+        removeBtn.addEventListener('click', (e) => {
+          e.preventDefault(); // Havolani ochilishini oldini olish
+          removeSearchItem(index);
+        });
+  
+        li.appendChild(removeBtn);
+        searchContent.appendChild(li);
+      });
+    }
+  
+    // Qidiruv elementini localStorage'dan o'chirish
+    function removeSearchItem(index) {
+      searchHistory.splice(index, 1); // Elementni massivdan o'chirish
+      localStorage.setItem('searchHistory', JSON.stringify(searchHistory)); // Yangilangan massivni saqlash
+      updateSearchContent(); // search-content ni yangilash
+    }
+  
+    // Sahifa yuklanganda search-content ni yangilash
+    updateSearchContent();
+  
+    // Qidiruv formasi jo'natilganda qidiruv qiymatini saqlash
+    document.querySelector('.search').addEventListener('submit', function() {
+      const input = document.querySelector('.search-input');
+      const query = input.value.trim();
+  
+      if (query && !searchHistory.includes(query)) {
+        searchHistory.unshift(query); // Eng oxirgi qidiruvni boshiga qo'shish
+        if (searchHistory.length > 10) searchHistory.pop(); // 10 ta elementdan ko'p bo'lsa, eng oxirgisini o'chirish
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory)); // localStorage ga saqlash
+      }
+      
+      // search-content ni yangilash
+      updateSearchContent();
+    });
+  </script>
+</body>
+
+</html>

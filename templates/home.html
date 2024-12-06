@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %} 
+{% block title %} Bosh sahifa{% endblock title %}
+{% block content %}
+<header>
+      <!-- Slider main container -->
+      <div class="swiper" id="swiper1">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            {% for banner in banners|slice:":4" %}
+            <div class="swiper-slide">
+                <a href="{{ banner.banner_link }}"><img src="{{ banner.image.url }}" alt="" /></a>
+            </div>
+            {% endfor %}
+        </div>
+    
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev swiper-button-prev1"></div>
+        <div class="swiper-button-next swiper-button-next1"></div>
+    </div>
+      <br /><br />
+      <div class="swiper-container">
+        <div class="swiper-wrapper categoryes">
+          {% for category in categories %}
+            <div class="swiper-slide category">
+              <a href="{% url "main:product_list" %}?category={{category.name}}"><img src="{{category.image.url}}" alt="" />{{category.name}}</a>
+            </div>
+          {% endfor %}
+          <!-- Shunga o'xshash ko'proq slaydlar -->
+        </div>
+      </div>
+    
+    </div>
+</header>
+<main>
+  <div class="newproductss" style="background: var(--border-color)">
+    <div class="container">
+        <br />
+        <h2 class="new-h2">Yangi mahsulotlar</h2>
+        <br />
+        <div class="swiper3" id="swipper3">
+            <div class="swiper-wrapper">
+                {% for product in new_products %}
+                <div class="swiper-slide">
+                    <div class="new-product">
+                        <a href="{% url "main:product_detail" product_id=product.id %}"> <!-- 'product_detail' URL'si bilan moslashtiring -->
+                          <div class="img">
+                            <img src="{{product.get_banner_image.image.url}}" alt="{{ product.name }}" /> <!-- Mahsulot rasmiga yo'l -->
+                          </div>
+                            <b> <i class="fa-solid fa-eye"></i>ko'rish </b>
+                            <img src="{% static 'img/new.png' %}" class="newtext" alt="" /> <!-- Yangi mahsulot belgisi -->
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <br />
+        <br />
+    </div>
+</div>
+
+
+    <div class="container">
+      <br />
+      <h2 class="new-h2">
+        <a href="{% url "main:product_list" %}" style="color: black;">Tavsiya etamiz</a>
+        <small><i class="fa-solid fa-chevron-right"></i></small>
+      </h2>
+      <br />
+      <div class="products">
+        {% for product in products %}
+        {% for color in product.colors.all %}
+          {% if not color.stock_quantity == 0 %}
+                <input type="hidden" name="color" class="myCheckbox{{product.id}}" value="{{color.id}}">
+          {% endif %}
+        {% endfor %}
+        <div class="product">
+          <a href="{% url "main:product_detail" product_id=product.id %}" class="p-left">
+            <img src="{{product.get_banner_image.image.url}}" alt="" />
+            <div class="hover-eye">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+          </a>
+          <div class="p-right">
+            <h2>
+              {{product.name|truncatewords:2}}
+            </h2>
+            {% if product.discount %}
+            <p><span>{{product.discount}}%</span> <s class="underline">{{product.get_format_price}} so’m</s></p>
+            {% endif %}
+            <h3>{{product.get_discounted_price}} so’m</h3>
+            <p class="cblue"><i class="fa-solid fa-truck-fast"></i>72 soat</p>
+            {% if product.get_average_rating %}
+            <ul class="stars">
+              
+              {% for i in "12345" %}
+                {% if forloop.counter <= product.get_average_rating %}
+                    <li><i class="fa-solid fa-star"></i></li> <!-- Yulduz -->
+                {% else %}
+                    <li><i class="fa-solid fa-star" style="color: grey;"></i></li> <!-- Bo'sh yulduz -->
+                {% endif %}
+              {% endfor %}
+              {% if product.order_count %}<li style="color: black"><small> ({{product.order_count}})</small></li>{% endif %}
+            </ul>
+            {% endif %}
+            <button class="cardbtn" onclick="addToCartHome(this)" data-product-id="{{product.id}}">
+              <i class="fa-solid fa-cart-shopping"></i>
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <a href="{% url "main:product_list" %}">
+        <button class="btn-more">Hammasini Ko'rish</button>
+      </a>
+    </div>
+  </main>
+{% endblock content %}

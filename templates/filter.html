@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %} Mahsulotlar{% endblock title %}
+{% load static %}
+{% block content %}
+    <main>
+        <form method="GET" action="#">
+        <div class="container">
+            <p class="detailpath">
+                Bosh sahifa /
+                <i> Barcha toifalar 
+                </i>
+            </p><br>
+            <div class="section-filter-product">
+                <div action="#" class="filter-sort">
+                    <h3 class="h3">Turkumlar</h3>
+                    <div class="sort-categorys">
+                        {% for category in categories  %}
+                        <div class="sortcategory">
+                            <input type="checkbox" {% if category.name in selected_categories %}checked{% endif %} name="category" class="myCheckbox" value="{{category.name}}">
+                            <p>{{category.name}}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <h3>Narx, baho, so'm</h3>
+                    <div class="sort-price"><br>
+                        
+                        <price-range currency="$">
+                            <div class="filter-minmax">
+                                <input type="number"  id="min-price" value="0" placeholder="1000"> 
+                                <input type="number" min="1" id="max-price" value="150000">
+                              </div><br>
+                            
+                            <div class="filter-container">
+                                <div class="track"></div>
+                                <input type="range" onfocus="this.setSelectionRange(0, 0)" min="0" max="1000" value="0" value="{% if selected_min_price %}{{selected_min_price}}{% else %}0{% endif %}">
+                                <input type="range" onfocus="this.setSelectionRange(0, 0)" min="0" max="1000" value="150" value="{% if selected_max_price %}{{selected_max_price}}{% else %}1000{% endif %}">
+                              </div>
+
+                        </price-range>
+                    </div><br>
+                    <h3>Ranglar</h3>
+
+                    <div class="sort-color">
+                        {% for color in colors %}
+                        <div class="sortcategory">
+                            <input type="checkbox" {% if color.color_code in selected_colors %}checked{% endif %} name="color" class="myCheckbox" value="{{color.color_code}}">
+
+                            <p><i class="fa" style="color:{{color.color_code}};">&#xf111</i> {{color.name}}</p>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                    <h3>Brendlar</h3>
+                    <div class="sort-brend">
+                        {% for brand in brands  %}
+                        <div class="sortcategory">
+                            <input type="checkbox" {% if brand.name in selected_brands %}checked{% endif %} name="brend" class="myCheckbox" value="{{brand.name}}">
+                            <p>{{brand.name}}</p>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                    <button class="sort-reset-btn">Filterlash</button>
+                    <a href="{% url "main:product_list" %}?"><div class="sort-reset-btn">Hammasini tozalash <i class="fa-solid fa-xmark"></i></div></a>
+
+                </div>
+                <div onclick="SortFilter()" class="unactive">
+                </div>
+                <div class="sort-products">
+
+                    <div class="sort-sale-menu">
+                        <div class="filter-sort" >
+                            <label style="font-weight: bolder;" for="cars">Avval ko’rsatiladi:</label>
+                            <select style="width: fit-content;" name="sorting" id="productss">
+                                <option value="ko'p sotilgan" {% if sorting == "ko'p sotilgan" %}selected{% endif %}>Ko'p sotilgan</option>
+                                <option value="arzon" {% if sorting == "arzon" %}selected{% endif %}>Arzon</option>
+                                <option value="qimmat" {% if sorting == "qimmat" %}selected{% endif %}>Qimmat</option>
+                                <option value="yangi" {% if sorting == "yangi" %}selected{% endif %}>Yangi</option>
+                            </select>
+                        </div>
+                        <button type="button" class="sort-btn" onclick="SortFilter()"><i class="fa-solid fa-filter"></i>Filter</button>
+                    </div>
+    </form>
+
+                    <div class="products ">
+                        {% if products %}
+                        {% for product in products %}
+                            <div class="product">
+                            <a href="{% url "main:product_detail" product_id=product.id %}" class="p-left">
+                                <img src="{{product.get_banner_image.image.url}}" alt="" />
+                                <div class="hover-eye">
+                                <i class="fa-solid fa-eye"></i>
+                                </div>
+                            </a>
+                            <div class="p-right">
+                                <h2>
+                                {{product.name|truncatewords:2}}
+                                </h2>
+                                {% if product.discount %}
+                                <p><span>{{product.discount}}%</span> <s class="underline">{{product.get_format_price}} so’m</s></p>
+                                {% endif %}
+                                <h3>{{product.get_discounted_price}} so’m</h3>
+                                <p class="cblue"><i class="fa-solid fa-truck-fast"></i>72 soat</p>
+                                {% if product.get_average_rating %}
+                                <ul class="stars">
+                                
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.get_average_rating %}
+                                        <li><i class="fa-solid fa-star"></i></li> <!-- Yulduz -->
+                                    {% else %}
+                                        <li><i class="fa-solid fa-star" style="color: grey;"></i></li> <!-- Bo'sh yulduz -->
+                                    {% endif %}
+                                {% endfor %}
+                                {% if product.order_count %}<li style="color: black"><small> ({{product.order_count}})</small></li>{% endif %}
+
+                                </ul>
+                                {% endif %}
+                                <button class="cardbtn" onclick="addToCartHome(this)" data-product-id="{{product.id}}">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                </button>
+                            </div>
+                            </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="none-product">
+                            <img class="notproduct" src="{% static "/img/notproduct.png" %}" alt="">
+                               <h1 class="new-h2"> Biz siz qidirayotgan narsani topa olmadik</h1>
+                        <h3 class="sellerh4">Mahsulot nomida xatolik yoki bizda hali bunday mahsulot boʻlmasligi mumkin</h3>
+                        </div>
+                        {% endif %}
+                    </div><br>
+                    {% if products.paginator.num_pages > 1 %}
+                    <div class="paginations">
+                        {% if products.has_previous %}
+                            <a href="?page=1{% if selected_categories %}&category={{ selected_categories|join:',' }}{% endif %}{% if selected_min_price %}&price-from={{ selected_min_price }}{% endif %}{% if selected_max_price %}&price-to={{ selected_max_price }}{% endif %}{% if selected_colors %}&color={{ selected_colors|join:',' }}{% endif %}{% if selected_brands %}&brend={{ selected_brands|join:',' }}{% endif %}{% if sorting %}&sorting={{ sorting }}{% endif %}">
+                                <div class="pagination-btn">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </div>
+                            </a>
+                        {% endif %}
+                    
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                                <div class="pagination-btn unnhover">
+                                    {{ num }}
+                                </div>
+                            {% else %}
+                                <a href="?page={{ num }}{% if selected_categories %}&category={{ selected_categories|join:',' }}{% endif %}{% if selected_min_price %}&price-from={{ selected_min_price }}{% endif %}{% if selected_max_price %}&price-to={{ selected_max_price }}{% endif %}{% if selected_colors %}&color={{ selected_colors|join:',' }}{% endif %}{% if selected_brands %}&brend={{ selected_brands|join:',' }}{% endif %}{% if sorting %}&sorting={{ sorting }}{% endif %}">
+                                    <div class="pagination-btn">
+                                        {{ num }}
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    
+                        {% if products.has_next %}
+                            <a href="?page={{ products.next_page_number }}{% if selected_categories %}&category={{ selected_categories|join:',' }}{% endif %}{% if selected_min_price %}&price-from={{ selected_min_price }}{% endif %}{% if selected_max_price %}&price-to={{ selected_max_price }}{% endif %}{% if selected_colors %}&color={{ selected_colors|join:',' }}{% endif %}{% if selected_brands %}&brend={{ selected_brands|join:',' }}{% endif %}{% if sorting %}&sorting={{ sorting }}{% endif %}">
+                                <div class="pagination-btn">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+    <br>
+{% endblock content %}

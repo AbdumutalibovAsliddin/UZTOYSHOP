@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %} Bog'lanish {% endblock title %}
+{% load static %}
+{% block content %}
+
+  <main>
+    <div class="container"><br>
+      <div class="contact-content">
+        <img class="contact-img" src="{% static "img/contact2.avif" %}" alt="">
+        <form class="form-cantact" method="post" action="{% url "main:contact" %}">
+          {% csrf_token %}
+          <div class="new-h2">
+            Ma’lumotlarim
+          </div>
+          <ul class="user-data-inputs cantactform" style="width: 100%;">
+            <li>
+              <p class="inp-name">Ism<span>*</span></p>
+              <input class="userdata-input" name="first_name" required type="text" value="{% if request.user.first_name %}{{request.user.first_name}}{% endif %}">
+            </li>
+            <li>
+              <p class="inp-name">Familiya<span>*</span></p>
+              <input class="userdata-input" name="last_name" required type="text" value="{% if request.user.last_name %}{{request.user.last_name}}{% endif %}">
+            </li>
+            <li>
+              <p class="inp-name">Telefon raqami<span>*</span></p>
+              <input class="userdata-input" name="phone_number" required type="text" maxlength="13" value="+998{% if request.user.phone_number %}{{request.user.phone_number}}{% endif %}">
+            </li>
+            <li>
+              <p class="inp-name">Manzil<span></span></p>
+              <input class="userdata-input" name="address" type="text" value="{% if request.user.address %}{{request.user.address}}{% endif %}">
+            </li>
+          </ul>
+          <textarea class="mytextarea" required id="area" name="description" value=" " placeholder="Savolingiz yoki taklifingizni yuboring..."></textarea><br>
+          <div style="display: flex;justify-content: space-between;">
+
+            <button style='width:100%' type="submit" class=" locate-open-btn cantactformbtn">Yuborish</button>
+          </div>
+        </form>
+        
+      </div>
+    </div>
+  </main>
+
+  {% endblock content %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}{% block title %} Savat{% endblock title %}
+{% load static %}
+{% block content %}
+
+    <main>
+        <div class="container">
+            {% if cart_items %}
+            <h2 class="new-h2">Savatingiz, &nbsp;<span style="color: var(--border-color);">{{cart_items.count}} ta mahsulot</span></h2>
+            <br>
+            <div class="cart-section">
+                <div class="cart-left">
+                    <div class="div-1">
+                        <div class="d1-left">
+                            <input type="checkbox" id="mainCheckbox" onclick="checkAll(this)">
+                            <h3 class="d1-h3">Hammasini yeching</h3>
+                        </div>
+                        <div class="d1-right">
+                            <h3 class="d1-h3">Yetkazib berishning eng yaqin sanasi: <span id="nextWeekDate">25 - oktabr</span></h3>
+                        </div>
+                    </div>
+                    <form action="{% url "cart:checkout" %}" id="CartForm" method="post">
+                    <div class="cart-products">
+                        {% for item in cart_items %}
+                        <div class="cartproduct {% if item.color.stock_quantity == 0 %}over-product{% endif %}" id="cart-item-{{item.id}}">
+                            <span class="ombor">Uz Toys Shop omborida</span>
+                            <h3 class="carth3"><span id="nextWeekDate">25-oktabr</span> orasida yetkazamiz</h3><br>
+                            <div class="cart-content">
+                                {% if not item.color.stock_quantity == 0 %}<input type="checkbox" class="cartinput" name="product" value="{{item.id}}" >{% endif %}
+                                <div class="cartp-img">
+
+                                    <a href="{% url "main:product_detail" item.product.id %}" style="width: 100%;">
+                                    
+                                        <img class="cartp-img" src="{{ item.product.get_banner_image.image.url }}" alt="">
+                                        <br>
+                                    </a>
+                                    <div class="number resintdn">
+                                        <div class="number-input">
+                                            <button type="button" onclick="changeValue(this, -1)" class="minus">-</button>
+                                            <input type="number" value="{{ item.quantity }}" min="1" max="item.product." oninput="validateInput(this)">
+                                            <button type="button" onclick="changeValue(this, 1)" class="plus">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ccr">
+                                    <h3 class="carth3 cartp-name">{{item.product.name}}
+                                    </h3>
+                                    <ul class="ul">
+                                        <li style="display: flex;">
+                                            <h4 class="sellerh4"><span>Sotuvchi: </span>{{ item.product.seller }}</h4>
+                                            <div class="number intdn">
+                                                <div class="number-input">
+                                                    <button type="button" onclick="changeValue(this, -1)" class="minus">-</button>
+                                                    <input type="number" value="{{ item.quantity }}" id="quantity-input-{{item.id}}" min="1"
+                                                           oninput="validateInput(this)" step="1">
+                                                    <button type="button" onclick="changeValue(this, 1)" class="plus">+</button>
+                                                    <button type="button" onclick="updateCartItemQuantity({{item.id}})"><i class="fas fa-sync-alt"></i></button>
+                                                </div>
+                                            </div><br>
+                                        </li>
+                                        <li>
+                                            <div class="pricess">
+                                                {% if item.product.discount %}
+                                                <div class="carth3 item">{{ item.product.get_discounted_price }} so’m</div>
+                                                <div class="sellerh4 item" style="text-decoration: line-through;color: var(--grey-color);">
+                                                    {{item.product.get_format_price}} so’m
+                                                </div>
+                                                {% else %}
+                                                <div class="carth3 item">{{ item.product.get_discounted_price }} so’m</div>
+                                                {% endif %}
+                                            </div>
+                                            <button type="button" class="cartdelete item" onclick="removeFromCart({{item.id}})"><i class="fa-solid fa-trash"></i> o’chirish</button>
+                                        </li>
+                                    </ul>
+                                    <div style="margin-left: 1%;text-wrap: nowrap;" class="checkout-h5">Rang: <i class="fa" style="color:{{item.color.color.color_code}};">&#xf111</i> {{ item.color.color.name }}</div>
+
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+                <div class="cart-right">
+                    <h2 class="d1-h3">Buyurtmangiz</h2>
+                    <ul >
+                        <li>
+                            <p id="total_quantity" style="color: var(--grey-color);">Mahsulotlar ({{total_quantity}}):</p>
+                        </li>
+                        <li id="total_price">
+                            <p>{{total_price}} so'm</p>
+                        </li>
+                    </ul>
+                    <h4 class="deliverytime">Yetkazib berish sanasi: <span id="nextWeekDate">25-oktabr</span></h4><br>
+                        {% csrf_token %}
+                        <button type="submit" class="checkout-btn">
+                            Rasmiylashtirish
+                        </button>
+                    </form>
+                    
+                </div>
+            </div>
+            {% else %}
+            <div class="none-product">
+                <img class="notproduct" src="{% static "/img/notproduct.png" %}" alt="">
+                   <h1 class="new-h2">Savatingiz hozircha bo‘sh</h1>
+            <h3 class="sellerh4">Bosh sahifadan boshlang — kerakli tovarni qidiruv orqali topishingiz yoki to‘plamlarni ko‘rishingiz mumkin</h3>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+
+    <script>const productInputs = document.querySelectorAll('input[name="product"]');
+
+        // Har bir inputni `checked` holatini true ga o'zgartiramiz
+        productInputs.forEach(input => {
+            input.checked = true;
+        });
+        document.querySelector('#mainCheckbox').checked = true
+
+        const today = new Date();
+
+        // Bir hafta qo'shish
+        const nextWeek = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+        // Oylar ro'yxati
+        const monthNames = [
+            "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+            "Iyul", "Avgust", "Sentyabr", "Oktabr", "Noyabr", "Dekabr"
+        ];
+
+        // Formatlash
+        const formattedDate = `${nextWeek.getDate()}-${monthNames[nextWeek.getMonth()]}`;
+
+        // Barcha `id="nextWeekDate"` elementlarini olish
+        const dateElements = document.querySelectorAll('#nextWeekDate');
+
+        // Har bir element uchun textni o'rnatish
+        dateElements.forEach(element => {
+            element.textContent = formattedDate;
+        });
+    </script>
+    {% endblock content %}

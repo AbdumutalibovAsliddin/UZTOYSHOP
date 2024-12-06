@@ -1,0 +1,218 @@
+{% load static %}
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+    <!-- Sidebar ni o'zgartirish (Topbar) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- Topbar qidiruvi -->
+    <form action="{% url "dashboard:product_list" %}" method="get"
+        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control bg-light border-0 small" placeholder="Qidirish..."
+                aria-label="Qidirish" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto">
+
+        <!-- Nav Elementi - Qidiruv Dropdown (faqat XS ko'rinishi uchun) -->
+        <li class="nav-item dropdown no-arrow d-sm-none">
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+            </a>
+            <!-- Dropdown - Xabarlar -->
+            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                aria-labelledby="searchDropdown">
+                <form action="{% url "dashboard:product_list" %}" method="get" class="form-inline mr-auto w-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control bg-light border-0 small"
+                            placeholder="Qidirish..." aria-label="Qidirish"
+                            aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+
+        <!-- Nav Elementi - Ogohlantirishlar -->
+        <li class="nav-item dropdown no-arrow mx-1">
+           
+            <a href="{% url "dashboard:barcode_view" %}" class="nav-link input-group-append">
+                <button class="btn btn-primary" type="button">
+                <i class="fas fa-solid fa-barcode"></i>
+                    
+                </button>
+            </a>
+            <!-- Dropdown - Ogohlantirishlar -->
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                    Ogohlantirishlar Markazi
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="mr-3">
+                        <div class="icon-circle bg-primary">
+                            <i class="fas fa-file-alt text-white"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="small text-gray-500">2019-yil 12-dekabr</div>
+                        <span class="font-weight-bold">Yangi oylik hisobotni yuklab olish uchun
+                            tayyor!</span>
+                    </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="mr-3">
+                        <div class="icon-circle bg-success">
+                            <i class="fas fa-donate text-white"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="small text-gray-500">2019-yil 7-dekabr</div>
+                        $290.29 hisobingizga o'tkazildi!
+                    </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="mr-3">
+                        <div class="icon-circle bg-warning">
+                            <i class="fas fa-exclamation-triangle text-white"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="small text-gray-500">2019-yil 2-dekabr</div>
+                        Xarajat ogohlantiruvi: Hisobingizda g'ayrioddiy yuqori xarajatlar ko'rildi.
+                    </div>
+                </a>
+                <a class="dropdown-item text-center small text-gray-500" href="#">Barcha
+                    Ogohlantirishlarni ko'rsatish</a>
+            </div>
+        </li>
+
+        <!-- Nav Elementi - Xabarlar -->
+        <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="{% url "dashboard:contact_view" %}" >
+                <i class="fas fa-envelope fa-fw"></i>
+                <!-- Hisoblagich - Xabarlar -->
+            </a>
+            <!-- Dropdown - Xabarlar -->
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                    Xabarlar Markazi
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="dropdown-list-image mr-3">
+                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
+                        <div class="status-indicator bg-success"></div>
+                    </div>
+                    <div class="font-weight-bold">
+                        <div class="text-truncate">Salom! Sizdan yordam so'rayapman, muammoga duch
+                            keldim.</div>
+                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                    </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="dropdown-list-image mr-3">
+                        <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
+                        <div class="status-indicator"></div>
+                    </div>
+                    <div>
+                        <div class="text-truncate">O'tgan oy buyurtma bergan suratlaringizni oldim,
+                            qanday qilib jo'natishni xohlaysiz?</div>
+                        <div class="small text-gray-500">Jae Chun · 1d</div>
+                    </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="dropdown-list-image mr-3">
+                        <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
+                        <div class="status-indicator bg-warning"></div>
+                    </div>
+                    <div>
+                        <div class="text-truncate">O'tgan oydagi hisobot ajoyib ko'rinadi, hozirgacha
+                            olib borgan ishlardan juda mamnunman, yaxshi ishni davom ettiring!</div>
+                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+                    </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="dropdown-list-image mr-3">
+                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                            alt="...">
+                        <div class="status-indicator bg-success"></div>
+                    </div>
+                    <div>
+                        <div class="text-truncate">Men yaxshi itmanmi? Buni so'rashimning sababi
+                            shundaki, kimdir buni barchaga aytgan, hatto ular yaxshi bo'lmasa ham...
+                        </div>
+                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
+                    </div>
+                </a>
+                <a class="dropdown-item text-center small text-gray-500" href="#">Barchasini o'qish</a>
+            </div>
+        </li>
+
+        <div class="topbar-divider d-none d-sm-block"></div>
+
+        <!-- Nav Elementi - Foydalanuvchi Ma'lumotlari -->
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{request.user.first_name}} {{request.user.last_name}}</span>
+                <img class="img-profile rounded-circle" src="{% if request.user.picture %}{{request.user.picture.url}}{% else %}{% static "admin/img/undraw_profile.svg" %}{% endif %} ">
+            </a>
+            <!-- Dropdown - Foydalanuvchi Ma'lumotlari -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{% url "dashboard:profile" %}">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Profil
+                </a>
+                <a class="dropdown-item" href="{% url "dashboard:edit_profile" %}">
+                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Profil Sozlamalari
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Chiqish
+                </a>
+            </div>
+        </li>
+
+    </ul>
+
+</nav>
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chiqishga tayyormisiz?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Yopish">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Agar hozirgi sessiyani tugatishga tayyor bo'lsangiz, quyidagi "Chiqish"
+                    tugmasini bosing.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Bekor qilish</button>
+                    <form action="{% url "dashboard:logout" %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Chiqish</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

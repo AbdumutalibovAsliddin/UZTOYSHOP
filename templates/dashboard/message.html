@@ -1,0 +1,149 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block css %}
+    <link href="{% static "admin/vendor/datatables/dataTables.bootstrap4.min.css" %}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7fa;
+        }
+        .message-container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .message-header {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .message-content {
+            font-size: 1.1em;
+        }
+        .user-email {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .message-time {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        /* Responsive text size adjustments */
+        @media (max-width: 576px) {
+            .message-content {
+                font-size: 0.9em; /* Mobile view font size */
+            }
+            .user-email {
+                font-size: 1em; /* Mobile view font size */
+            }
+            .message-time {
+                font-size: 0.8em; /* Mobile view font size */
+            }
+        }
+    </style>
+{% endblock css %}
+
+{% block content %}
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include "dashboard/navbar.html" %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                {% include "dashboard/navbar2.html" %}
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Xabar</h1>
+                    <p class="mb-4">Bu do'koningizdan foydalanuchisidan kelgan fikr</p>
+                
+                    <!-- Message Card -->
+                    <div class="message-card card p-3 col-md-10 m-auto">
+                        <div class="message-header">
+                            <h5 class="user-email">Foydalanuvchi: {{ message.first_name }} {{ message.last_name }}</h5>
+                            <h6 class="message-time">Kelgan vaqt: {{message.create_time|date:"Y-m-d, H:i"}}</h6>
+                            <h6 class="message-time">Telefon raqam: <span>{{ message.phone_number }}</span></h6>
+                            <h6>Kelgan xabar:</h6>
+                        </div>
+                        <div class="message-content">
+                            <p>{{ message.description }}</p>
+                        </div>
+                    </div>
+                    <br>
+                    <a href="{% url "dashboard:contact_view" %}">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Orqaga
+                        </button>
+                    </a>
+                </div>
+                
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Mualliflik huquqi &copy; Sizning Saytingiz 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chiqishga tayyormisiz?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Yopish">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Agar hozirgi sessiyani tugatishga tayyor bo'lsangiz, quyidagi "Chiqish"
+                    tugmasini bosing.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Bekor qilish</button>
+                    <a class="btn btn-primary" href="login.html">Chiqish</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+
+    <!-- Page level plugins -->
+    <script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static "js/demo/datatables-demo.js" %}"></script>
+{% endblock script %}

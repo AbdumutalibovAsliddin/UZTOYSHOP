@@ -1,0 +1,177 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block css %}
+    <link href="{% static "admin/vendor/datatables/dataTables.bootstrap4.min.css" %}" rel="stylesheet">
+    <!-- Custom styles for this page -->
+    <style>
+        body {
+            background-color: #f8f9fa; /* Yengil fon rangi */
+        }
+        .card {
+            max-width: 600px; /* Kartaning maksimal kengligi */
+            margin: auto; /* Markazga joylash */
+            padding: 20px; /* Ichki joylash */
+        }
+        .dots {
+            border-bottom: 1px dotted #000; /* Nuqtalar */
+            flex-grow: 1; /* Bo'sh joyni to'ldiradi */
+            margin: 0 10px; /* Margin o'ng va chap tomondan */
+        }
+    </style>
+    
+{% endblock css %}
+
+
+{% block content %}
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include 'dashboard/navbar.html' %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                {% include "dashboard/navbar2.html" %}
+
+                <!-- End of Topbar -->
+
+                
+
+
+
+
+
+
+
+
+
+
+
+                <div class="container mt-5">
+                    <div class="card shadow-sm"> <!-- Soyali kartani qo'shish -->
+                        <div class="card-header">
+                            <h3 class="text-start">Shaxsiy profil</h3> <!-- O'rtadan chapga o'zgartirildi -->
+                        </div>
+                        <div class="card-body text-start"> <!-- O'rtadan chapga o'zgartirildi -->
+                            <div class="text-center mb-3"> <!-- Rasmni markazda joylashtirish -->
+                                <img src="{% if user_profile.picture %}{{user_profile.picture.url}}{% else %} https://cdn-icons-png.flaticon.com/512/10845/10845690.png{% endif %}" alt="Foydalanuvchi rasmi" style="width:150px;height:150px" class="rounded-circle">
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 text-end"><strong>Ism:</strong></div>
+                                <div class="col-6 d-flex justify-content-end">{{user_profile.first_name}}</div> <!-- O'ng tomonga yopishdi -->
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 text-end"><strong>Familiya:</strong></div>
+                                <div class="col-6 d-flex justify-content-end">{{user_profile.last_name}}</div> <!-- O'ng tomonga yopishdi -->
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 text-end"><strong>Telefon raqami:</strong></div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="me-2">{{user_profile.get_format_phone}}</div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 text-end"><strong>Gmail:</strong></div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="me-2">{{user_profile.email}}</div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 text-end"><strong>Telgeram id:</strong></div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="me-2">{{user_profile.telegram_id}}</div>
+                                </div>
+                            </div>
+                            <hr>
+                            <h5 class="card-title">Mahsulotlar</h5>
+                            <div class="row mb-2">
+                                <div class="col-6 text-end"><strong>Jami mahsulotlari:</strong></div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="me-2">{{user_profile.get_seller_product}}</div>
+                                </div>
+                            </div>
+                            <div class="row mb-2 d-flex align-items-center">
+                                <div class="col-6 text-end"><strong>Sotilgan mahsulotlari:</strong></div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div>{{user_profile.get_seller_order}}</div>
+                                </div>
+                            </div>
+                            {% if request.user == user_profile %}
+                            <div class="mt-3 d-flex justify-content-between flex-wrap"> <!-- Tugmalarni bir-biriga yopishtirib joylashtirish -->
+                                <a href="{% url "dashboard:create_product" %}" class="btn btn-primary me-2 mb-2">Yangi Mahsulot Qo'shish</a>
+                                <a href="{% url "dashboard:edit_profile" %}" class="btn btn-secondary ">Tahrirlash</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Mualliflik huquqi &copy; Sizning Saytingiz 2025</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chiqishga tayyormisiz?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Yopish">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Agar hozirgi sessiyani tugatishga tayyor bo'lsangiz, quyidagi "Chiqish"
+                    tugmasini bosing.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Bekor qilish</button>
+                    <a class="btn btn-primary" href="login.html">Chiqish</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+
+    <!-- Page level plugins -->
+    <script src="{% static "admin/vendor/datatables/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "admin/vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static "admin/js/demo/datatables-demo.js" %}"></script>
+{% endblock script %}
