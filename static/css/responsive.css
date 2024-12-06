@@ -55,7 +55,7 @@
     }
 
     .product .p-right h2 {
-        font-size: 25px;
+        font-size: 22px;
     }
 
     .product .p-right h3 {
@@ -76,8 +76,8 @@
     }
 
     .cardbtn i {
-        background: var(--yellow-color);
         padding: 10px;
+        font-size: 18px;
 
     }
 
@@ -247,12 +247,16 @@
         display: block;
         margin: 2%;
         line-height: 170%;
+        
 
 
     }
 
     .products .product .p-left {
         width: 100%;
+        height: 200px;
+        margin-bottom: 5%;
+       
     }
 
     .new-h2 {
@@ -507,7 +511,7 @@
 
 
     .product .p-right h2 {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .product .p-right h3 {
@@ -774,7 +778,7 @@
 
 
     .product .p-right h2 {
-        font-size: 17px;
+        font-size: 14px;
     }
 
     .product .p-right h3 {
@@ -796,6 +800,7 @@
 
     .cardbtn i {
         padding: 5px;
+        font-size: 10px;
 
     }
 
@@ -1007,6 +1012,10 @@
         margin-right: 0;
         font-size: 16px;
     }
+    .products .product .p-left {
+        height: 120px;
+       
+    }
 }
 
 
@@ -1043,15 +1052,20 @@
 
     .products .product {
         width: 110px;
-        margin: 1px;
+        margin:10px 1px;
 
         line-height: 100%;
 
 
     }
+    .products .product .p-left {
+        height: 100px;
+       
+    }
+
 
     .product .p-right h2 {
-        font-size: 15px;
+        font-size: 13px;
     }
 
     .cartp-name {

@@ -419,12 +419,14 @@ b {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
+        align-items: start;
         width: 100%;
 }
 
 .products .product {
         width: 500px;
         display: flex;
+        /* align-items: self-start; */
         line-height: 200%;
         position: relative;
         margin-top: 1%;
@@ -444,7 +446,7 @@ b {
 }
 
 .product .p-right h2 {
-        font-size: 30px;
+        font-size: 26px;
 }
 
 .product .p-right h3 {
@@ -485,7 +487,8 @@ b {
 .cardbtn i {
         border-radius: 50%;
         background: var(--yellow-color);
-        padding: 15px;
+        padding: 10px;
+        font-size: 20px;
         cursor: pointer;
 
 }

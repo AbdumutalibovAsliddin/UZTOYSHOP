@@ -30,7 +30,7 @@
           <!-- Shunga o'xshash ko'proq slaydlar -->
         </div>
       </div>
-    
+    <br>
     </div>
 </header>
 <main>
@@ -85,7 +85,7 @@
           </a>
           <div class="p-right">
             <h2>
-              {{product.name|truncatewords:2}}
+              {{product.name|slice:17}}...
             </h2>
             {% if product.discount %}
             <p><span>{{product.discount}}%</span> <s class="underline">{{product.get_format_price}} so’m</s></p>
